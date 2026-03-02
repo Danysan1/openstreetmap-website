@@ -7,3 +7,15 @@ sotm_africa_2025:
     - [banners/sotm_africa_2025.png, 1x]
   startdate: 2026-may-26
   enddate: 2026-june-26
+
+5x1000_italy_2026:
+  id: 5x1000_italy_2026
+  alt: Dona il tuo 5x1000 a OpenStreetMap Italia
+  link: https://www.wikimedia.it/news/dona-il-tuo-5x1000-a-wikimedia-italia/
+  img: banners/5x1000_italy_2026.png
+  srcset:
+    - [banners/5x1000_italy_2026.png, 1x]
+  startdate: 2026-feb-27
+  enddate: 2026-june-26
+  locales:
+    - it
