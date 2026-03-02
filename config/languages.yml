@@ -232,6 +232,9 @@ is:
 it: 
   english: Italian
   native: Italiano
+it-IT: 
+  english: Italian (Italy)
+  native: Italiano (Italia)
 iu: 
   english: Inuktitut
   native: ᐃᓄᒃᑎᑐᑦ/inuktitut

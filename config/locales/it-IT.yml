@@ -72,7 +72,7 @@
 # Author: Ximo17
 # Author: ZioNicco
 ---
-it:
+it-IT:
   date:
     formats:
       heatmap: '%B %-d'
