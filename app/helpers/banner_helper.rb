@@ -15,8 +15,7 @@ module BannerHelper
         enddate = nil
       end
 
-      startdate&.future? || enddate&.past? ||
-        (v[:locales] && !v[:locales].include?(I18n.locale.to_s))
+      startdate&.future? || enddate&.past? || v[:locales]&.exclude?(I18n.locale.to_s)
     end
   end
 
