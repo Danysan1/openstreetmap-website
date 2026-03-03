@@ -15,7 +15,7 @@ sotm_africa_2025:
   img: banners/5x1000_italy_2026.jpg
   srcset:
     - [banners/5x1000_italy_2026.jpg, 1x]
-  startdate: 2026-feb-27
-  enddate: 2026-june-26
+  startdate: 2026-may-10
+  enddate: 2026-june-10
   countries:
     - IT
