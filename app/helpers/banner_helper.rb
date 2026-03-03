@@ -15,7 +15,10 @@ module BannerHelper
         enddate = nil
       end
 
-      startdate&.future? || enddate&.past? || v[:locales]&.exclude?(I18n.locale.to_s)
+      wrong_locale = v[:locales]&.exclude?(I18n.locale.to_s)
+      wrong_country = v[:countries]&.exclude?(OSM.ip_to_country(request.remote_ip))
+
+      startdate&.future? || enddate&.past? || wrong_locale || wrong_country
     end
   end
 
