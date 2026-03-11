@@ -36,8 +36,7 @@ class BannerHelperTest < ActionView::TestCase
 
     stub_const(:BANNERS, banners) do
       I18n.with_locale(:de) do
-        result = active_banners
-        assert_includes result.keys, :german
+        assert_includes active_banners.keys, :german
       end
 
       I18n.with_locale(:en) do
@@ -47,14 +46,10 @@ class BannerHelperTest < ActionView::TestCase
   end
 
   def test_banner_with_multiple_locales
-    banners = { :regional => make_banner("regional", :locales => %w[it en-GB zh-TW]) }
+    banners = { :regional => make_banner("regional", :locales => %w[it zh-TW]) }
 
     stub_const(:BANNERS, banners) do
       I18n.with_locale(:it) do
-        assert_includes active_banners.keys, :regional
-      end
-
-      I18n.with_locale(:"en-GB") do
         assert_includes active_banners.keys, :regional
       end
 
@@ -64,6 +59,29 @@ class BannerHelperTest < ActionView::TestCase
 
       I18n.with_locale(:fr) do
         assert_empty active_banners
+      end
+    end
+  end
+
+  def test_multiple_banners_single_locale
+    banners = {
+      :german => make_banner("german_only", :locales => %w[de]),
+      :chinese => make_banner("chinese_only", :locales => %w[zh-TW])
+    }
+
+    stub_const(:BANNERS, banners) do
+      I18n.with_locale(:it) do
+        assert_empty active_banners
+      end
+
+      I18n.with_locale(:de) do
+        assert_includes active_banners.keys, :german
+        assert_not_includes active_banners.keys, :chinese
+      end
+
+      I18n.with_locale(:"zh-TW") do
+        assert_includes active_banners.keys, :chinese
+        assert_not_includes active_banners.keys, :german
       end
     end
   end
@@ -89,27 +107,15 @@ class BannerHelperTest < ActionView::TestCase
     end
   end
 
-  def test_banner_without_countries
-    banners = { :global => make_banner("global") }
-
-    stub_const(:BANNERS, banners) do
-      OSM.stub(:ip_to_country, "IT") do
-        assert_includes active_banners.keys, :global
-      end
-    end
-  end
-
   def test_banner_with_single_country
     banners = { :germany => make_banner("germany", :countries => %w[DE]) }
 
     stub_const(:BANNERS, banners) do
-      OSM.stub(:ip_to_country, "DE") do
-        assert_includes active_banners.keys, :germany
-      end
+      params[:country] = "DE"
+      assert_includes active_banners.keys, :germany
 
-      OSM.stub(:ip_to_country, "US") do
-        assert_empty active_banners
-      end
+      params[:country] = "US"
+      assert_empty active_banners
     end
   end
 
@@ -117,17 +123,34 @@ class BannerHelperTest < ActionView::TestCase
     banners = { :itde => make_banner("itde", :countries => %w[IT DE]) }
 
     stub_const(:BANNERS, banners) do
-      OSM.stub(:ip_to_country, "IT") do
-        assert_includes active_banners.keys, :itde
-      end
+      params[:country] = "IT"
+      assert_includes active_banners.keys, :itde
 
-      OSM.stub(:ip_to_country, "DE") do
-        assert_includes active_banners.keys, :itde
-      end
+      params[:country] = "DE"
+      assert_includes active_banners.keys, :itde
 
-      OSM.stub(:ip_to_country, "US") do
-        assert_empty active_banners
-      end
+      params[:country] = "US"
+      assert_empty active_banners
+    end
+  end
+
+  def test_multiple_banners_single_country
+    banners = {
+      :germany => make_banner("germany_only", :countries => %w[DE]),
+      :italy => make_banner("italy_only", :countries => %w[IT])
+    }
+
+    stub_const(:BANNERS, banners) do
+      params[:country] = "US"
+      assert_empty active_banners
+
+      params[:country] = "DE"
+      assert_includes active_banners.keys, :germany
+      assert_not_includes active_banners.keys, :italy
+
+      params[:country] = "IT"
+      assert_includes active_banners.keys, :italy
+      assert_not_includes active_banners.keys, :germany
     end
   end
 
@@ -138,17 +161,15 @@ class BannerHelperTest < ActionView::TestCase
     }
 
     stub_const(:BANNERS, banners) do
-      OSM.stub(:ip_to_country, "IT") do
-        result = active_banners
-        assert_includes result.keys, :global
-        assert_includes result.keys, :italy
-      end
+      params[:country] = "IT"
+      result = active_banners
+      assert_includes result.keys, :global
+      assert_includes result.keys, :italy
 
-      OSM.stub(:ip_to_country, "US") do
-        result = active_banners
-        assert_includes result.keys, :global
-        assert_not_includes result.keys, :italy
-      end
+      params[:country] = "US"
+      result = active_banners
+      assert_includes result.keys, :global
+      assert_not_includes result.keys, :italy
     end
   end
 
